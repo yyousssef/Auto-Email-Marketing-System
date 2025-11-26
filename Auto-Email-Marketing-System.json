@@ -1,0 +1,144 @@
+{
+  "name": "Auto Email Marketing System",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "74a63e79-7849-4ddc-a775-c6d4a71fb09b",
+      "name": "Daily Trigger",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        -16,
+        -32
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://example.com/api/products",
+        "jsonParameters": true,
+        "options": {}
+      },
+      "id": "0c58be35-c33e-49bb-8a2f-94b51495733c",
+      "name": "Fetch Products",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        240,
+        -32
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "items.sort((a,b) => b.json.popularity - a.json.popularity);\nreturn items.slice(0,5);"
+      },
+      "id": "b5e5c038-2f56-4a4c-a828-48eb00d92ef7",
+      "name": "Select Top 5 Products",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        496,
+        -32
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        }
+      },
+      "id": "0f153b23-62a4-4c37-9c10-b94a37526eb3",
+      "name": "Get Email List",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 3,
+      "position": [
+        736,
+        -32
+      ]
+    },
+    {
+      "parameters": {
+        "subject": "🔥 منتجات جديدة مميزة لك",
+        "options": {}
+      },
+      "id": "088593e9-e537-402a-badd-ff9f80f02a52",
+      "name": "Send Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [
+        992,
+        -32
+      ],
+      "webhookId": "2471ae95-0a51-4119-b090-95884da64ad5",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": null,
+          "name": "Gmail API"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Daily Trigger": {
+      "main": [
+        [
+          {
+            "node": "Fetch Products",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Products": {
+      "main": [
+        [
+          {
+            "node": "Select Top 5 Products",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Select Top 5 Products": {
+      "main": [
+        [
+          {
+            "node": "Get Email List",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Email List": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "277f54a1-3401-43ae-a47c-8385c7438bf2",
+  "meta": {
+    "instanceId": "2ddabfb1788364c84c554645ea0827de8b2e37490e53b974d7321dcfedcbb516"
+  },
+  "id": "NSLF3txfjv7ONC8g",
+  "tags": []
+}
